@@ -184,13 +184,22 @@
 
 - (NSNumber *)patternToUniqueId
 {
-	long finalNumber = 0;
-	long thisNum;
-	for(int i = self.cellsInOrder.count - 1 ; i >= 0 ; i--){
-		thisNum = ([[self.cellsInOrder objectAtIndex:i] integerValue] + 1) * pow(10, (self.cellsInOrder.count - i - 1));
-		finalNumber = finalNumber + thisNum;
-	}
-	return @(finalNumber);
+    NSArray *copy = [self.cellsInOrder copy];
+    NSInteger index = [copy count] - 1;
+    for (id object in [copy reverseObjectEnumerator]) {
+        if ([self.cellsInOrder indexOfObject:object inRange:NSMakeRange(0, index)] != NSNotFound) {
+            [self.cellsInOrder removeObjectAtIndex:index];
+        }
+        index--;
+    }
+
+    long finalNumber = 0;
+    long thisNum;
+    for(int i = self.cellsInOrder.count - 1 ; i >= 0 ; i--){
+        thisNum = ([[self.cellsInOrder objectAtIndex:i] integerValue] + 1) * pow(10, (self.cellsInOrder.count - i - 1));
+        finalNumber = finalNumber + thisNum;
+    }
+    return @(finalNumber);
 }
 
 - (void)resetScreen
